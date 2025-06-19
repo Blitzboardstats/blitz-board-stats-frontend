@@ -1,0 +1,38 @@
+
+# This is the Supabase config file
+
+project_id = "ylpwfpnwxatskgihscff"
+
+[api]
+# Port used by the API Gateway
+port = 54321
+schemas = ["public", "storage", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+# Port used by the database
+port = 54322
+major_version = 15
+
+[studio]
+# Port used by Studio
+port = 54323
+
+[inbucket]
+# Port used by the email testing server
+port = 54324
+smtp_port = 54325
+pop3_port = 54326
+
+[storage]
+# Port used by the blob storage server
+port = 54327
+
+[auth]
+# Port used by the JWT service
+port = 54328
+
+[pooler]
+# Port used by the connection pooler
+port = 54329

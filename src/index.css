@@ -1,0 +1,91 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 13% 91%; /* Light grey instead of white */
+    --foreground: 0 0% 8%; /* Darkened from 15% to 8% for better contrast */
+
+    --card: 220 13% 95%; /* Slightly lighter grey for cards */
+    --card-foreground: 0 0% 8%; /* Consistent with foreground */
+
+    --popover: 220 13% 95%;
+    --popover-foreground: 0 0% 8%;
+
+    --primary: 270 95% 45%;
+    --primary-foreground: 0 0% 98%;
+
+    --secondary: 142 70% 35%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 220 13% 85%; /* Darker muted color */
+    --muted-foreground: 0 0% 8%; /* Changed from 40% to 8% for black text */
+
+    --accent: 142 70% 35%;
+    --accent-foreground: 0 0% 98%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 13% 80%; /* Darker border */
+    --input: 220 13% 88%; /* Darker input background */
+    --ring: 270 95% 45%;
+
+    --radius: 0.5rem;
+
+    /* Enhanced text hierarchy tokens */
+    --text-primary: 0 0% 8%; /* Main headings and important text */
+    --text-secondary: 0 0% 8%; /* Changed from 20% to 8% for black text */
+    --text-tertiary: 0 0% 8%; /* Changed from 40% to 8% for black text */
+    --text-disabled: 0 0% 60%; /* Disabled states */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+.nav-link {
+  @apply flex flex-col items-center justify-center text-xs font-medium transition-colors;
+}
+
+.nav-link.active {
+  @apply text-blitz-green;
+}
+
+.nav-link:not(.active) {
+  @apply text-foreground hover:text-foreground/80;
+}
+
+.blitz-btn {
+  @apply bg-blitz-purple text-white font-semibold py-3 px-4 rounded-lg hover:bg-blitz-purple/90 transition-colors shadow-sm;
+}
+
+.blitz-card {
+  @apply bg-card rounded-lg p-4 border border-border shadow-sm;
+}
+
+.input-field {
+  @apply bg-input border border-border rounded-lg p-4 w-full text-foreground focus:outline-none focus:ring-2 focus:ring-blitz-purple focus:border-transparent shadow-sm;
+}
+
+/* Accessibility utility classes */
+.text-high-contrast {
+  color: hsl(var(--text-primary));
+}
+
+.text-medium-contrast {
+  color: hsl(var(--text-secondary));
+}
+
+.text-low-contrast {
+  color: hsl(var(--text-tertiary));
+}
