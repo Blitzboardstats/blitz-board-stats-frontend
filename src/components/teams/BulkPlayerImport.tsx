@@ -18,6 +18,7 @@ import DivisionSelectionStep from "./bulkImport/DivisionSelectionStep";
 import PlayerPreviewStep from "./bulkImport/PlayerPreviewStep";
 import ImportActions from "./bulkImport/ImportActions";
 import SimpleRosterImport from "./bulkImport/SimpleRosterImport";
+import ManualPlayerEntry from "./ManualPlayerEntry";
 
 interface BulkPlayerImportProps {
   open: boolean;
@@ -32,7 +33,7 @@ const BulkPlayerImport = ({
   onImportPlayers,
   teamId,
 }: BulkPlayerImportProps) => {
-  const [activeTab, setActiveTab] = useState("simple");
+  const [activeTab, setActiveTab] = useState("advanced");
 
   // Advanced import states
   const [rawData, setRawData] = useState("");
@@ -184,7 +185,7 @@ const BulkPlayerImport = ({
     if (!open) {
       resetAdvancedForm();
       resetSimpleForm();
-      setActiveTab("simple");
+      setActiveTab("advanced");
     }
     onOpenChange(open);
   };
@@ -227,32 +228,20 @@ const BulkPlayerImport = ({
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2 bg-blitz-darkgray">
             <TabsTrigger
-              value="simple"
-              className="data-[state=active]:bg-blitz-purple"
-            >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Simple Roster
-            </TabsTrigger>
-            <TabsTrigger
               value="advanced"
-              className="data-[state=active]:bg-blitz-purple"
+              className="text-white data-[state=active]:bg-blitz-purple"
             >
               <Upload className="w-4 h-4 mr-2" />
               Advanced Import
             </TabsTrigger>
+            <TabsTrigger
+              value="manual"
+              className="text-white data-[state=active]:bg-blitz-purple"
+            >
+              <UserPlus className="w-4 h-4 mr-2" />
+              Manual Entry
+            </TabsTrigger>
           </TabsList>
-
-          <TabsContent value="simple" className="mt-4">
-            <SimpleRosterImport
-              rawData={simpleRawData}
-              onRawDataChange={setSimpleRawData}
-              onParseData={handleParseSimpleData}
-              parsedPlayers={simpleParsedPlayers}
-              isProcessing={isSimpleProcessing}
-              onImport={handleSimpleImport}
-              onCancel={() => onOpenChange(false)}
-            />
-          </TabsContent>
 
           <TabsContent value="advanced" className="mt-4">
             <div className="space-y-6">
@@ -286,6 +275,14 @@ const BulkPlayerImport = ({
                 onImport={handleAdvancedImport}
               />
             </div>
+          </TabsContent>
+
+          <TabsContent value="manual" className="mt-4">
+            <ManualPlayerEntry
+              onImportPlayers={onImportPlayers}
+              teamId={teamId}
+              onCancel={() => onOpenChange(false)}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>
