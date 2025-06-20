@@ -50,10 +50,21 @@ const INVITATION_TYPES = [
 ] as const;
 
 const COACH_ROLES = [
-  "headCoach",
-  "assistantCoach",
-  "statistician",
-  "teamManager",
+  {
+    value: "headCoach",
+    label: "Head Coach",
+    description: "Has full coaching privileges and team management access",
+  },
+  {
+    value: "assistantCoach",
+    label: "Assistant Coach",
+    description: "Has coaching privileges and team management access",
+  },
+  // {
+  //   value: "statistician",
+  //   label: "Statistician",
+  //   description: "Can view team information, schedule, and communicate with the team",
+  // },
 ] as const;
 
 const InvitePersonDialog = ({
@@ -68,8 +79,7 @@ const InvitePersonDialog = ({
     "member" | "coach" | "player"
   >("member");
   const [playerName, setPlayerName] = useState("");
-  const [coachRole, setCoachRole] =
-    useState<(typeof COACH_ROLES)[number]>("assistantCoach");
+  const [coachRole, setCoachRole] = useState(COACH_ROLES[1]);
   const [inviteeName, setInviteeName] = useState("");
 
   const { sendInvitation, isLoading, error } = useInvitationStore();
@@ -88,14 +98,14 @@ const InvitePersonDialog = ({
         teamId,
         email: email.trim(),
         invitationType,
-        coachRole: invitationType === "coach" ? coachRole : undefined,
+        coachRole: invitationType === "coach" ? coachRole.value : undefined,
         name: inviteeName.trim(),
       });
       setEmail("");
       setInviteeName("");
       setPlayerName("");
       setInvitationType("member");
-      setCoachRole("assistantCoach");
+      setCoachRole(COACH_ROLES[1]); // Use the actual object instead of string
       onOpenChange(false);
       toast.success("Invitation sent successfully!");
     } catch (error) {
@@ -204,10 +214,13 @@ const InvitePersonDialog = ({
                 Coach Role
               </Label>
               <Select
-                value={coachRole}
-                onValueChange={(value) =>
-                  setCoachRole(value as (typeof COACH_ROLES)[number])
-                }
+                value={coachRole.value}
+                onValueChange={(value) => {
+                  const role = COACH_ROLES.find((r) => r.value === value);
+                  if (role) {
+                    setCoachRole(role);
+                  }
+                }}
               >
                 <SelectTrigger className='bg-blitz-darkgray text-white border-gray-700'>
                   <SelectValue placeholder='Select a role' />
@@ -215,11 +228,11 @@ const InvitePersonDialog = ({
                 <SelectContent className='bg-blitz-darkgray text-white border-gray-700'>
                   {COACH_ROLES.map((role) => (
                     <SelectItem
-                      key={role}
-                      value={role}
+                      key={role.label}
+                      value={role.value}
                       className='text-white hover:bg-blitz-gray'
                     >
-                      {role}
+                      {role.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
