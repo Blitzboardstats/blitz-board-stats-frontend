@@ -1,18 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { create } from "zustand";
 import { Team, TeamCoach } from "@/types/teamTypes";
+import { Player } from "@/types/playerTypes";
 import { teamApi } from "@/api/team"; // You'll need to create this API client
-
-export interface Player {
-  id: string;
-  name: string;
-  jersey_number: number;
-  position?: string;
-  team_id: string;
-  guardian_email?: string;
-  guardian_name?: string;
-  photo_url?: string;
-}
 
 export interface TeamState {
   teams: Team[];
@@ -34,6 +24,10 @@ export interface TeamActions {
   // Team Detail API
   getTeamPlayers: (teamId: string) => Promise<void>;
   getTeamCoaches: (teamId: string) => Promise<void>;
+  bulkImportPlayers: (
+    teamId: string,
+    players: Omit<Player, "id" | "created_at">[]
+  ) => Promise<Player[] | { error: string }>;
 
   // State Management
   setCurrentTeam: (team: Team | null) => void;
@@ -161,6 +155,23 @@ export const useTeamStore = create<TeamState & TeamActions>()((set, get) => ({
         error?.message ||
         "Failed to fetch team coaches";
       set({ error: errorMessage, isLoading: false });
+    }
+  },
+
+  bulkImportPlayers: async (
+    teamId: string,
+    players: Omit<Player, "id" | "created_at">[]
+  ): Promise<Player[] | { error: string }> => {
+    set({ isLoading: true, error: null });
+    try {
+      const importedPlayers = await teamApi.bulkImportPlayers(teamId, players);
+      set({ isLoading: false });
+      return importedPlayers;
+    } catch (error: any) {
+      const errorMessage =
+        error?.data?.message || error?.message || "Failed to import players";
+      set({ isLoading: false });
+      return { error: errorMessage };
     }
   },
 

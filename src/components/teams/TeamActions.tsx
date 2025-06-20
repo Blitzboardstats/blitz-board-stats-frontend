@@ -24,7 +24,8 @@ import { Team } from "@/types/teamTypes";
 import { Player } from "@/types/playerTypes";
 import { ProcessedPlayerStats } from "@/types/bulkStatsTypes";
 import { useAuth } from "@/contexts/AuthContextOptimized";
-import { useAuthStore } from "@/stores";
+import { useAuthStore, useTeamStore } from "@/stores";
+import { toast } from "sonner";
 
 interface TeamActionsProps {
   team: Team;
@@ -50,6 +51,7 @@ const TeamActions = ({
   canManageTeam,
 }: TeamActionsProps) => {
   const { user } = useAuthStore();
+  const { bulkImportPlayers } = useTeamStore();
 
   const [isAddPlayerOpen, setIsAddPlayerOpen] = useState(false);
   const [isEditTeamOpen, setIsEditTeamOpen] = useState(false);
@@ -59,21 +61,44 @@ const TeamActions = ({
   const [isDirectStatsImportOpen, setIsDirectStatsImportOpen] = useState(false);
   const [isBulkPlayerImportOpen, setIsBulkPlayerImportOpen] = useState(false);
 
+  const handleBulkImportPlayers = async (
+    players: Omit<Player, "id" | "created_at">[]
+  ): Promise<boolean> => {
+    try {
+      const result = await bulkImportPlayers(
+        team._id || team.id || "",
+        players
+      );
+
+      if (typeof result === "object" && "error" in result) {
+        toast.error(result.error as string);
+        return false;
+      } else {
+        toast.success("Players imported successfully");
+        return true;
+      }
+    } catch (error) {
+      console.error("Error importing players:", error);
+      toast.error("Failed to import players");
+      return false;
+    }
+  };
+
   if (!canManageTeam) {
     return null;
   }
 
   return (
-    <div className="mb-6">
-      <Card className="bg-blitz-darkgray border-gray-700">
+    <div className='mb-6'>
+      <Card className='bg-blitz-darkgray border-gray-700'>
         <CardHeader>
-          <CardTitle className="text-lg text-blitz-purple flex items-center gap-2">
-            <Settings className="w-5 h-5 text-blitz-purple" />
+          <CardTitle className='text-lg text-blitz-purple flex items-center gap-2'>
+            <Settings className='w-5 h-5 text-blitz-purple' />
             Team Management
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-wrap gap-3">
+          <div className='flex flex-wrap gap-3'>
             {/* Multi-Team Practice Button - prioritized placement */}
             <MultiTeamPracticeButton
               userTeams={userTeams}
@@ -82,88 +107,88 @@ const TeamActions = ({
 
             <Button
               onClick={() => setIsInviteDialogOpen(true)}
-              className="bg-blitz-green hover:bg-blitz-green/80"
+              className='bg-blitz-green hover:bg-blitz-green/80'
             >
-              <Mail className="w-4 h-4 mr-2" />
-              Invite Person
+              <Mail className='w-4 h-4 mr-2' />
+              Invite Coaching Staff
             </Button>
 
             {user.role === "guardian" && (
               <Button
                 onClick={() => setIsAddPlayerOpen(true)}
-                className="bg-blitz-purple hover:bg-blitz-purple/80"
+                className='bg-blitz-purple hover:bg-blitz-purple/80'
               >
-                <UserPlus className="w-4 h-4 mr-2" />
+                <UserPlus className='w-4 h-4 mr-2' />
                 Add Player
               </Button>
             )}
 
             <Button
               onClick={() => setIsBulkStatsImportOpen(true)}
-              variant="outline"
-              className="border-gray-600 text-black hover:bg-gray-700/20"
+              variant='outline'
+              className='border-gray-600 text-black hover:bg-gray-700/20'
             >
-              <BarChart3 className="w-4 h-4 mr-2" />
+              <BarChart3 className='w-4 h-4 mr-2' />
               Import Season Stats
             </Button>
 
             <Button
               onClick={() => setIsDirectStatsImportOpen(true)}
-              className="bg-blue-800 text-white hover:bg-blue-900"
+              className='bg-blue-800 text-white hover:bg-blue-900'
             >
-              <FileSpreadsheet className="w-4 h-4 mr-2" />
+              <FileSpreadsheet className='w-4 h-4 mr-2' />
               Import Stats (Direct)
             </Button>
 
             {user.role === "admin" && (
               <Button
                 onClick={onAddCoach}
-                variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-700"
+                variant='outline'
+                className='border-gray-600 text-gray-300 hover:bg-gray-700'
               >
-                <Users className="w-4 h-4 mr-2" />
+                <Users className='w-4 h-4 mr-2' />
                 Add Coach
               </Button>
             )}
 
             <Button
               onClick={() => setIsEditTeamOpen(true)}
-              className="bg-teal-600 text-white hover:bg-teal-700"
+              className='bg-teal-600 text-white hover:bg-teal-700'
             >
-              <Settings className="w-4 h-4 mr-2" />
+              <Settings className='w-4 h-4 mr-2' />
               Edit Team
             </Button>
 
             <Button
               onClick={() => setIsDeleteTeamOpen(true)}
-              variant="destructive"
-              className="bg-orange-600 hover:bg-orange-700 text-white"
+              variant='destructive'
+              className='bg-orange-600 hover:bg-orange-700 text-white'
             >
-              <Trash className="w-4 h-4 mr-2" />
+              <Trash className='w-4 h-4 mr-2' />
               Delete Team
             </Button>
 
             <Button
               onClick={() => setIsBulkPlayerImportOpen(true)}
-              className="bg-blitz-purple hover:bg-blitz-purple/90 text-white"
+              className='bg-blitz-purple hover:bg-blitz-purple/90 text-white'
             >
-              <UserPlus className="w-4 h-4 mr-2" />
-              Add Roster
+              <UserPlus className='w-4 h-4 mr-2' />
+              Add Player Roster
             </Button>
           </div>
 
-          <div className="mt-4 flex items-center gap-2">
-            <Badge variant="outline" className="text-gray-400 border-gray-600">
+          <div className='mt-4 flex items-center gap-2'>
+            <Badge variant='outline' className='text-gray-400 border-gray-600'>
               {team.numberOfPlayers} Player
               {team.numberOfPlayers !== 1 ? "s" : ""}
             </Badge>
-            <Badge variant="outline" className="text-gray-400 border-gray-600">
+            <Badge variant='outline' className='text-gray-400 border-gray-600'>
               {team.footballType || "Flag Football"}
             </Badge>
             {team.ageGroup && (
               <Badge
-                variant="outline"
-                className="text-gray-400 border-gray-600"
+                variant='outline'
+                className='text-gray-400 border-gray-600'
               >
                 {team.ageGroup}
               </Badge>
@@ -221,7 +246,7 @@ const TeamActions = ({
         open={isBulkPlayerImportOpen}
         onOpenChange={setIsBulkPlayerImportOpen}
         teamId={team.id}
-        onImportPlayers={onAddPlayer}
+        onImportPlayers={handleBulkImportPlayers}
       />
     </div>
   );

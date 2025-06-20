@@ -1,5 +1,6 @@
 import apiClient from "./client";
 import { Team } from "@/types/teamTypes";
+import { Player } from "@/types/playerTypes";
 import { API_ENDPOINTS } from "./config";
 import { getErrorResponse } from "@/utils/response";
 
@@ -72,6 +73,21 @@ export const teamApi = {
     try {
       const response = await apiClient.get(
         API_ENDPOINTS.teams.getCoaches(teamId)
+      );
+      return response.data.data;
+    } catch (error) {
+      throw getErrorResponse(error);
+    }
+  },
+
+  bulkImportPlayers: async (
+    teamId: string,
+    players: Omit<Player, "id" | "created_at">[]
+  ): Promise<Player[]> => {
+    try {
+      const response = await apiClient.post(
+        API_ENDPOINTS.teams.bulkImportPlayers(teamId),
+        { players }
       );
       return response.data.data;
     } catch (error) {

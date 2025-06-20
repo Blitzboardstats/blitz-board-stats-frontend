@@ -22,6 +22,7 @@ export const API_ENDPOINTS = {
     delete: (id: string) => `/teams/${id}`,
     getPlayers: (id: string) => `/teams/${id}/players`,
     getCoaches: (id: string) => `/teams/${id}/coachs`,
+    bulkImportPlayers: (id: string) => `/teams/${id}/players/bulk`,
   },
 
   teamInvitations: {

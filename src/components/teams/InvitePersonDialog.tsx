@@ -32,7 +32,7 @@ interface InvitePersonDialogProps {
 const INVITATION_TYPES = [
   {
     value: "teamManager",
-    label: "Team Member (Parent/Guardian)",
+    label: "Team Manager",
     description:
       "Can view team information, schedule, and communicate with the team",
   },
@@ -41,12 +41,12 @@ const INVITATION_TYPES = [
     label: "Coach",
     description: "Has coaching privileges and full team management access",
   },
-  {
-    value: "players",
-    label: "Player",
-    description:
-      "Will be added as a player and can participate in games and practices",
-  },
+  // {
+  //   value: "players",
+  //   label: "Player",
+  //   description:
+  //     "Will be added as a player and can participate in games and practices",
+  // },
 ] as const;
 
 const COACH_ROLES = [
@@ -105,46 +105,46 @@ const InvitePersonDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-blitz-darkgray border-gray-700 text-gray-100 sm:max-w-md">
+      <DialogContent className='bg-blitz-darkgray border-gray-700 text-gray-100 sm:max-w-md'>
         <DialogHeader>
-          <DialogTitle>Invite Person to Team</DialogTitle>
-          <DialogDescription className="text-gray-400">
+          <DialogTitle>Invite Coaching Staff</DialogTitle>
+          <DialogDescription className='text-gray-400'>
             Send an invitation to join {teamName}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1">
-            <Label htmlFor="inviteeName" className="text-white">
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          <div className='space-y-1'>
+            <Label htmlFor='inviteeName' className='text-white'>
               Name *
             </Label>
             <Input
-              id="inviteeName"
-              placeholder="Enter name of invited person"
+              id='inviteeName'
+              placeholder='Enter name of invited person'
               value={inviteeName}
               onChange={(e) => setInviteeName(e.target.value)}
               required
-              className="bg-blitz-darkgray text-white border-gray-700 placeholder:text-gray-400"
+              className='bg-blitz-darkgray text-white border-gray-700 placeholder:text-gray-400'
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="email" className="text-white">
+          <div className='space-y-1'>
+            <Label htmlFor='email' className='text-white'>
               Email Address *
             </Label>
             <Input
-              id="email"
-              type="email"
-              placeholder="Enter email address"
+              id='email'
+              type='email'
+              placeholder='Enter email address'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="bg-blitz-darkgray text-white border-gray-700 placeholder:text-gray-400"
+              className='bg-blitz-darkgray text-white border-gray-700 placeholder:text-gray-400'
             />
           </div>
 
-          <div className="space-y-1">
-            <Label htmlFor="type" className="text-white">
+          <div className='space-y-1'>
+            <Label htmlFor='type' className='text-white'>
               Invitation Type
             </Label>
             <Select
@@ -153,15 +153,15 @@ const InvitePersonDialog = ({
                 setInvitationType(value as typeof invitationType)
               }
             >
-              <SelectTrigger className="bg-blitz-darkgray text-white border-gray-700">
-                <SelectValue placeholder="Select invitation type" />
+              <SelectTrigger className='bg-blitz-darkgray text-white border-gray-700'>
+                <SelectValue placeholder='Select invitation type' />
               </SelectTrigger>
-              <SelectContent className="bg-blitz-darkgray text-white border-gray-700">
+              <SelectContent className='bg-blitz-darkgray text-white border-gray-700'>
                 {INVITATION_TYPES.map((type) => (
                   <SelectItem
                     key={type.value}
                     value={type.value}
-                    className="text-white hover:bg-blitz-gray"
+                    className='text-white hover:bg-blitz-gray'
                   >
                     {type.label}
                   </SelectItem>
@@ -169,16 +169,16 @@ const InvitePersonDialog = ({
               </SelectContent>
             </Select>
             {selectedInvitationType && (
-              <div className="p-2 bg-blitz-charcoal rounded border border-gray-600 flex items-start gap-2">
-                <InfoIcon className="h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                <p className="text-xs text-gray-300">
+              <div className='p-2 bg-blitz-charcoal rounded border border-gray-600 flex items-start gap-2'>
+                <InfoIcon className='h-4 w-4 text-blue-400 mt-0.5 flex-shrink-0' />
+                <p className='text-xs text-gray-300'>
                   {selectedInvitationType.description}
                 </p>
               </div>
             )}
           </div>
 
-          {invitationType === "player" && (
+          {/* {invitationType === "player" && (
             <div className="space-y-1">
               <Label htmlFor="playerName" className="text-white">
                 Player Name *
@@ -196,11 +196,11 @@ const InvitePersonDialog = ({
                 games and practices.
               </p>
             </div>
-          )}
+          )} */}
 
           {invitationType === "coach" && (
-            <div className="space-y-1">
-              <Label htmlFor="role" className="text-white">
+            <div className='space-y-1'>
+              <Label htmlFor='role' className='text-white'>
                 Coach Role
               </Label>
               <Select
@@ -209,22 +209,22 @@ const InvitePersonDialog = ({
                   setCoachRole(value as (typeof COACH_ROLES)[number])
                 }
               >
-                <SelectTrigger className="bg-blitz-darkgray text-white border-gray-700">
-                  <SelectValue placeholder="Select a role" />
+                <SelectTrigger className='bg-blitz-darkgray text-white border-gray-700'>
+                  <SelectValue placeholder='Select a role' />
                 </SelectTrigger>
-                <SelectContent className="bg-blitz-darkgray text-white border-gray-700">
+                <SelectContent className='bg-blitz-darkgray text-white border-gray-700'>
                   {COACH_ROLES.map((role) => (
                     <SelectItem
                       key={role}
                       value={role}
-                      className="text-white hover:bg-blitz-gray"
+                      className='text-white hover:bg-blitz-gray'
                     >
                       {role}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <p className="text-xs text-gray-400">
+              <p className='text-xs text-gray-400'>
                 The person will have coaching privileges and full team
                 management access.
               </p>
@@ -232,8 +232,8 @@ const InvitePersonDialog = ({
           )}
 
           {invitationType === "member" && (
-            <div className="p-2 bg-blitz-charcoal rounded border border-gray-600">
-              <p className="text-xs text-gray-300">
+            <div className='p-2 bg-blitz-charcoal rounded border border-gray-600'>
+              <p className='text-xs text-gray-300'>
                 <strong>Team Member Access:</strong> The person will be able to
                 view team information, schedule, and communicate with the team.
                 This is typically used for parents and guardians.
@@ -241,20 +241,20 @@ const InvitePersonDialog = ({
             </div>
           )}
 
-          <DialogFooter className="pt-4">
+          <DialogFooter className='pt-4'>
             <Button
-              type="submit"
+              type='submit'
               disabled={
                 isLoading ||
                 !email.trim() ||
                 !inviteeName.trim() ||
                 (invitationType === "player" && !playerName.trim())
               }
-              className="w-full bg-blitz-purple hover:bg-blitz-purple/90 text-white"
+              className='w-full bg-blitz-purple hover:bg-blitz-purple/90 text-white'
             >
               {isLoading ? (
-                <div className="flex items-center gap-2">
-                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+                <div className='flex items-center gap-2'>
+                  <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent'></div>
                   <span>Sending Invitation...</span>
                 </div>
               ) : (
