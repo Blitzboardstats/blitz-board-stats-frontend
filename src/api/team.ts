@@ -82,7 +82,7 @@ export const teamApi = {
 
   bulkImportPlayers: async (
     teamId: string,
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ): Promise<Player[]> => {
     try {
       const response = await apiClient.post(

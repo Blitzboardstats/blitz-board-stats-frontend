@@ -1,48 +1,47 @@
-
 export interface Player {
   id: string;
-  team_id: string;
+  teamId: string;
   name: string;
   position?: string;
-  jersey_number?: string;
-  guardian_name?: string;
-  guardian_email?: string;
-  photo_url?: string;
-  graduation_year?: number;
-  recruit_profile?: string;
+  jerseyNumber?: string;
+  guardianName?: string;
+  guardianEmail?: string;
+  photoUrl?: string;
+  graduationYear?: number;
+  recruitProfile?: string;
   stats?: PlayerStats;
-  created_at: Date | string;
-  user_id?: string;
-  team_relationships?: PlayerTeamRelationship[];
+  createdAt: Date | string;
+  userId?: string;
+  teamRelationships?: PlayerTeamRelationship[];
 }
 
 export interface PlayerStats {
   id?: string;
-  player_id?: string;
-  games_played?: number;
+  playerId?: string;
+  gamesPlayed?: number;
   touchdowns?: number;
   tackles?: number;
   catches?: number;
   yards?: number;
-  created_at?: Date | string;
-  updated_at?: Date | string;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
   [key: string]: number | string | Date | undefined;
 }
 
 export interface PlayerTeamRelationship {
   id: string;
-  player_id: string;
-  team_id: string;
-  joined_at: string;
-  left_at?: string;
-  status: 'active' | 'inactive' | 'transferred';
-  created_at: string;
-  updated_at: string;
+  playerId: string;
+  teamId: string;
+  joinedAt: string;
+  leftAt?: string;
+  status: "active" | "inactive" | "transferred";
+  createdAt: string;
+  updatedAt: string;
   team?: {
     id: string;
     name: string;
-    football_type: string;
-    age_group?: string;
+    footballType: string;
+    ageGroup?: string;
     season?: string;
   };
 }

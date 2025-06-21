@@ -5,7 +5,7 @@ import { Player } from "@/types/playerTypes";
 
 interface ManualPlayerEntryProps {
   onImportPlayers: (
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ) => Promise<boolean>;
   teamId: string;
   onCancel: () => void;
@@ -20,15 +20,6 @@ interface ManualPlayerRow {
   guardianEmail: string;
 }
 
-const emptyRow: ManualPlayerRow = {
-  playerFirstName: "",
-  playerLastName: "",
-  jerseyNumber: "",
-  guardianFirstName: "",
-  guardianLastName: "",
-  guardianEmail: "",
-};
-
 function validateEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -42,7 +33,7 @@ const ManualPlayerEntry = ({
   teamId,
   onCancel,
 }: ManualPlayerEntryProps) => {
-  const [rows, setRows] = useState<ManualPlayerRow[]>([{ ...emptyRow }]);
+  const [rows, setRows] = useState<ManualPlayerRow[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [errors, setErrors] = useState<{
     [idx: number]: { email?: string; jersey?: string };
@@ -77,7 +68,7 @@ const ManualPlayerEntry = ({
   };
 
   const handleAddRow = () => {
-    setRows((prev) => [...prev, { ...emptyRow }]);
+    setRows((prev) => [...prev]);
   };
 
   const handleRemoveRow = (idx: number) => {
@@ -111,22 +102,25 @@ const ManualPlayerEntry = ({
   const handleSubmit = async () => {
     if (!validateAll()) return;
     setIsProcessing(true);
-    const players: Omit<Player, "id" | "created_at">[] = rows.map((row) => ({
-      team_id: teamId,
+    const players: Omit<Player, "id" | "createdAt">[] = rows.map((row) => ({
+      teamId: teamId,
       name: `${row.playerFirstName} ${row.playerLastName}`.trim(),
-      position: "",
-      jersey_number: row.jerseyNumber,
-      guardian_name: `${row.guardianFirstName} ${row.guardianLastName}`.trim(),
-      guardian_email: row.guardianEmail,
-      photo_url: undefined,
-      graduation_year: undefined,
-      recruit_profile: "",
+      // position: row.position,
+      jerseyNumber: +row.jerseyNumber,
+      guardianName: `${row.guardianFirstName} ${row.guardianLastName}`.trim()
+        .length
+        ? `${row.guardianFirstName} ${row.guardianLastName}`.trim()
+        : undefined,
+      guardianEmail: row.guardianEmail.length ? row.guardianEmail : undefined,
+      photoUrl: undefined,
+      graduationYear: undefined,
+      recruitProfile: "",
     }));
 
     const success = await onImportPlayers(players);
     setIsProcessing(false);
     if (success) {
-      setRows([{ ...emptyRow }]);
+      setRows([]);
       setErrors({});
     }
   };

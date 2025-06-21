@@ -26,7 +26,7 @@ export interface TeamActions {
   getTeamCoaches: (teamId: string) => Promise<void>;
   bulkImportPlayers: (
     teamId: string,
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ) => Promise<Player[] | { error: string }>;
 
   // State Management
@@ -160,7 +160,7 @@ export const useTeamStore = create<TeamState & TeamActions>()((set, get) => ({
 
   bulkImportPlayers: async (
     teamId: string,
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ): Promise<Player[] | { error: string }> => {
     set({ isLoading: true, error: null });
     try {

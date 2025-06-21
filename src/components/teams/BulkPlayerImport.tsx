@@ -25,7 +25,7 @@ interface BulkPlayerImportProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onImportPlayers: (
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ) => Promise<boolean>;
   teamId: string;
 }
@@ -121,17 +121,17 @@ const BulkPlayerImport = ({
     setIsProcessing(true);
 
     try {
-      const players: Omit<Player, "id" | "created_at">[] = playersToImport.map(
+      const players: Omit<Player, "id" | "createdAt">[] = playersToImport.map(
         (player) => ({
-          team_id: teamId,
+          teamId: teamId,
           name: player.playerName,
           position: "",
-          jersey_number: player.jerseyNumber,
-          guardian_name: player.guardianName || "",
-          guardian_email: player.guardianEmail || "",
-          photo_url: undefined,
-          graduation_year: undefined,
-          recruit_profile: "",
+          jerseyNumber: player.jerseyNumber,
+          guardianName: player.guardianName || "",
+          guardianEmail: player.guardianEmail || "",
+          photoUrl: undefined,
+          graduationYear: undefined,
+          recruitProfile: "",
         })
       );
 
@@ -168,17 +168,17 @@ const BulkPlayerImport = ({
     setIsSimpleProcessing(true);
 
     try {
-      const players: Omit<Player, "id" | "created_at">[] =
+      const players: Omit<Player, "id" | "createdAt">[] =
         simpleParsedPlayers.map((player) => ({
-          team_id: teamId,
+          teamId: teamId,
           name: player.playerName,
           position: "",
-          jersey_number: player.jerseyNumber,
-          guardian_name: player.guardianName || "",
-          guardian_email: player.guardianEmail || "",
-          photo_url: undefined,
-          graduation_year: undefined,
-          recruit_profile: "",
+          jerseyNumber: player.jerseyNumber,
+          guardianName: player.guardianName || "",
+          guardianEmail: player.guardianEmail || "",
+          photoUrl: undefined,
+          graduationYear: undefined,
+          recruitProfile: "",
         }));
 
       // Log the parsed data that will be sent to the backend

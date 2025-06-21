@@ -51,7 +51,7 @@ const TeamActions = ({
   canManageTeam,
 }: TeamActionsProps) => {
   const { user } = useAuthStore();
-  const { bulkImportPlayers } = useTeamStore();
+  const { bulkImportPlayers, getTeamPlayers, getTeam } = useTeamStore();
 
   const [isAddPlayerOpen, setIsAddPlayerOpen] = useState(false);
   const [isEditTeamOpen, setIsEditTeamOpen] = useState(false);
@@ -62,12 +62,27 @@ const TeamActions = ({
   const [isBulkPlayerImportOpen, setIsBulkPlayerImportOpen] = useState(false);
 
   const handleBulkImportPlayers = async (
-    players: Omit<Player, "id" | "created_at">[]
+    players: Omit<Player, "id" | "createdAt">[]
   ): Promise<boolean> => {
     try {
+      console.log({ playerss: "==============================", players });
+
+      const playersData: any = players.map((row) => ({
+        teamId: team._id,
+        name: `${row.name}`.trim(),
+        // position: row.position,
+        jerseyNumber: +row.jerseyNumber,
+        guardianName: `${row.guardianName}`.trim().length
+          ? `${row.guardianName}`.trim()
+          : undefined,
+        guardianEmail: row.guardianEmail.length ? row.guardianEmail : undefined,
+        photoUrl: undefined,
+        graduationYear: undefined,
+        recruitProfile: "",
+      }));
       const result = await bulkImportPlayers(
         team._id || team.id || "",
-        players
+        playersData
       );
 
       if (typeof result === "object" && "error" in result) {
@@ -75,6 +90,11 @@ const TeamActions = ({
         return false;
       } else {
         toast.success("Players imported successfully");
+        // Refetch players and team details from the store after successful import
+        await Promise.all([
+          getTeamPlayers(team._id || team.id || ""),
+          getTeam(team._id || team.id || ""),
+        ]);
         return true;
       }
     } catch (error) {
